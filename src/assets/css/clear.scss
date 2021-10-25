@@ -1,0 +1,56 @@
+@import './element.scss';
+
+*,
+p,
+ul,
+dl,
+dd,
+dt {
+	margin: 0;
+	padding: 0;
+}
+a {
+	text-decoration: none;
+	color: #333;
+}
+body {
+	font-size: 14px;
+	color: var(--R80);
+	background-color: var(--bgColor);
+	line-height: 1.5;
+	cursor: default;
+	-webkit-font-smoothing: antialiased;
+	-moz-osx-font-smoothing: grayscale;
+	font-family: 'Helvetica Neue', Helvetica, 'PingFang SC', 'Hiragino Sans GB',
+		'Microsoft YaHei', 微软雅黑, Arial, sans-serif;
+}
+
+a,span,b{display: inline-block;}
+
+html,
+body,
+#app {
+	height: 100%;
+}
+
+ul,
+li {
+	list-style: none;
+}
+img {
+	display: block;
+	user-select: none;
+}
+// span, b, i{display: inline-block;}
+i {
+	font-style: normal;
+}
+
+.iconfont {
+	user-select: none;
+	display: inline-block;
+}
+
+.router-link-active {
+	color: var(--main) !important;
+}

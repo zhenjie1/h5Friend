@@ -1,0 +1,18 @@
+body{
+    // 颜色值
+	--red: rgb(245, 108, 108);
+	--yellow: rgb(230, 162, 60);
+	--blue: rgb(64, 158, 255);
+	--gray: var(--R40);
+
+	// 微信官方主颜色
+	--wechatMsgColor: #a9e97a; // 微信消息颜色
+	--wechatColor: #57be6a; // 微信主色调(图标)颜色
+	--wechatBgColor: #56ab6d; // 微信绿色背景颜色
+	--wechatLogoColor: linear-gradient(#67df7b, #57be6a); // 微信 logo 颜色
+}
+
+.red{color: var(--red);}
+.yellow{color: var(--yellow);}
+.blue{color: var(--blue);}
+.gray{color: var(--gray);}

@@ -1,0 +1,50 @@
+// /*
+//     [p|m][t|r|b|l|a|x|y]-[none|xs|sm|md|lg|xl]
+//       T       D                   S
+
+//     T - type
+//     - values: p (padding), m (margin)
+
+//     D - direction
+//     - values:
+//         t (top), r (right), b (bottom), l (left),
+//         a (all), x (both left & right), y (both top & bottom)
+
+//     S - size
+//     - values:
+//         none,
+//         sm (small),
+//         md (medium),
+//         lg (large),
+//         xl (extra large)
+// */
+
+// $T: (p: padding, m: margin);
+// $X: (x: (left, right), y: (top, bottom), a: (left, top, right, bottom));
+// $D: (t: top, r: right, b: bottom, l: left,);
+// $S: (xs: 10, sm: 16, md: 20, lg: 26, xl: 32);
+
+
+// .m-none{margin: 0;}
+// .p-none{padding: 0;}
+// @each $tk, $tv in $T{
+//     @each $sk, $sv in $S {    
+//         @each $xk, $xv in $X {
+//             .#{$tk}#{$xk}-#{$sk}{
+//                 @each $xvv in $xv{
+//                     #{$tv}-#{$xvv}: #{$sv}px;
+//                 }
+//             }
+//         }
+//     }
+    
+//     @each $dk, $dv in $D {
+//         @each $sk, $sv in $S {
+//             .#{$tk}#{$dk}-#{$sk}{#{$tv}-#{$dv}: #{$sv}px;}
+//         }
+//     }
+// }
+
+// @for $i from 1 through 100 {
+//     .w-#{$i}{width: #{$i * 10}px;}
+// }

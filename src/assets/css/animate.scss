@@ -1,0 +1,14 @@
+
+.fade-enter-active {
+	transition: transform .2s, opacity .2s cubic-bezier(0.4,-0.02, 1, 0.5);
+}
+
+// .fade-leave-from{transform: translateX(10px);position: absolute;opacity: 1;}
+// // .fade-leave-from{transform: translateX(10px);position: absolute;opacity: 1;}
+// .fade-leave-active{transition: transform .2sx, opacity .2s;transform: translateX(10px);position: absolute;opacity: 1;}
+
+.fade-enter-from{
+    position: absolute;
+	transform: translateX(-10px);
+	opacity: 0;
+}

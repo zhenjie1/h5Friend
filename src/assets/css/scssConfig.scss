@@ -1,0 +1,14 @@
+// 使元素多行超过指定行数时显示省略号, $lint: 几行
+@mixin lineOmit($line) {
+	display: -webkit-box;
+	-webkit-box-orient: vertical;
+	-webkit-line-clamp: $line;
+	overflow: hidden;
+}
+
+// 使元素超过一行时显示省略号
+@mixin omit() {
+	overflow: hidden;
+	text-overflow: ellipsis;
+	white-space: nowrap;
+}
