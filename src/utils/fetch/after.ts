@@ -1,6 +1,5 @@
 import axios, { AxiosRequestConfig, AxiosResponse } from 'axios'
 import router from '@/router'
-import { clearUserCache } from '@/assets/js/user'
 import { api } from '@/api'
 import store from '@/store'
 
@@ -21,7 +20,6 @@ function codeErrorDeal(config: AxiosResponse<any>) {
 
 	if ([900018, 900010, 900101].includes(code)) {
 		router.push('/login')
-		clearUserCache()
 	} else if (code === 900019) {
 		return ajaxGetNewToken(config.config).then(axios)
 	}

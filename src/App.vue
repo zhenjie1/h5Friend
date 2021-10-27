@@ -45,7 +45,7 @@ $menuWidth: 60px;
 	}
 	> ::v-deep(.router) {
 		flex-grow: 1;
-		width: calc(100% - #{$menuWidth});
+		width: 100%;
 		//background-color: var(--bgColor);
 	}
 }

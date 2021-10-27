@@ -2,7 +2,7 @@ import { RootState } from './type'
 import { Plugin } from 'vuex'
 import { debounce, cloneDeep, merge } from 'lodash'
 import { get, set } from 'idb-keyval'
-import { vuexName } from '@/assets/js/keys'
+const vuexName = 'vuex'
 
 function storeIndexDB() {
 	const save: Plugin<RootState> = async (store) => {

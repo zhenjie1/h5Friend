@@ -1,16 +1,13 @@
 import { createApp } from 'vue'
 import VConsole from 'vconsole'
 import AppTemp from '@/App.vue'
-import 'js/test'
 
 // const vconsole = new VConsole({})
 
 // import 'js/reload'
-import '@/plugins/socket/index'
 
 import store from '@/store'
 import initGlobalComponent from '@/plugins/globalComponents/globalComponents'
-import '@/plugins/indexDB/index'
 
 // 引入的 css 资源
 import 'css/tailwindcss.css'
