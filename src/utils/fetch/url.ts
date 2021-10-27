@@ -1,5 +1,4 @@
 import { stringify } from 'qs'
-type A = Exclude
 
 export default function ajaxUrl(type: 'ws' | 'ajax' = 'ajax'): string {
 	const { host, protocol } = location
@@ -8,13 +7,16 @@ export default function ajaxUrl(type: 'ws' | 'ajax' = 'ajax'): string {
 	const urlKey = getQueryString('url')
 
 	const urls: { [key: string]: [string, string] | undefined } = {
-		gt: ['http://192.168.3.3:9811', '192.168.3.3'],
-		ysx: ['https://local.taishana.com', 'local.taishana.com'],
+		// 王朝正
+		wcz: ['http://wcz.free.idcfengye.com/index.php', ''],
+		// 正式
+		zs: ['http://152.136.201.85/index.php', ''],
 	}
 
 	if (urlKey) {
 		const index: 0 | 1 = type === 'ajax' ? 0 : 1
-		return urls[urlKey]![index]
+		return '/' + urlKey
+		// return urls[urlKey]![index]
 	}
 
 	return onlineUrl

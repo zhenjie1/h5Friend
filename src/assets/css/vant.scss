@@ -1,0 +1,14 @@
+:root{
+    // --van-cell-group-background-color: transparent;
+    // --van-cell-background-color: transparent;
+
+    --van-uploader-delete-icon-size: 26px;
+}
+
+// .van-cell,.van-field__label{color: var(--textColor);}
+// .van-field__control{color: var(--text);}
+.van-uploader__upload{background-color: var(--bgHover);}
+.van-button--block{width: 90%;margin-left: auto;margin-right: auto;}
+
+.van-uploader__preview-delete{border-radius: 0}
+.van-uploader__preview-delete-icon{line-height: var(--van-uploader-delete-icon-size);width: var(--van-uploader-delete-icon-size);display: inline-block;transform: scale(.7);}

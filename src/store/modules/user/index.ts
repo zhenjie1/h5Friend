@@ -7,10 +7,10 @@ export * from './actions'
 export * from './mutations'
 export * from './getters'
 
-const friendStore = {
+const userStore = {
 	namespaced: true,
 	state: friendState,
 	actions,
 	mutations,
 }
-export default friendStore
+export default userStore

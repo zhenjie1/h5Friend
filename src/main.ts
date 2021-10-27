@@ -1,18 +1,14 @@
 import { createApp } from 'vue'
-import { createPinia } from 'pinia'
+import VConsole from 'vconsole'
 import AppTemp from '@/App.vue'
-import 'js/tool/index'
 import 'js/test'
 
-import 'js/rxjs/index'
+// const vconsole = new VConsole({})
 
 // import 'js/reload'
 import '@/plugins/socket/index'
 
-import initGlobalDirective from './assets/js/directive'
 import store from '@/store'
-import '@/pinia'
-import initElementUi from '@/plugins/element'
 import initGlobalComponent from '@/plugins/globalComponents/globalComponents'
 import '@/plugins/indexDB/index'
 
@@ -24,22 +20,18 @@ import 'css/wechat.scss'
 // import 'css/theme/blackTheme.css'
 import router from './router/index'
 import { appentTheme } from './assets/css/theme'
+import initVant from './plugins/vant'
 
 // 添加主题
 appentTheme()
 
-async function createVue() {
-	const app = createApp(AppTemp as any)
+const app = createApp(AppTemp as any)
 
-	app.config.performance = true
+app.config.performance = true
 
-	app.use(router).use(store).use(createPinia())
+app.use(router).use(store)
 
-	initGlobalDirective(app)
-	initElementUi(app)
-	initGlobalComponent(app)
+initVant(app)
+initGlobalComponent(app)
 
-	app.mount('#app')
-}
-
-createVue()
+app.mount('#app')

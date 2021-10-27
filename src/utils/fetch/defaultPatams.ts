@@ -1,7 +1,7 @@
-import { tokenKey } from '@/assets/js/keys'
+import store from '@/store'
 import { AxiosRequestConfig } from 'axios'
-import Cookie from 'js-cookie'
-import { isObject, isEqual, isEqualWith, cloneDeep, isBoolean } from 'lodash'
+import qs from 'qs'
+import { isEqual } from 'lodash'
 import { isFormData } from '../tool'
 import ajaxUrl from './url'
 
@@ -25,47 +25,42 @@ export default function defaultParams(
 	const {
 		url,
 		method = 'POST',
-		storePath = false,
 		timeout = 1 * 60 * 1000,
 		headers = {},
-		body = {
-			aa: 'test',
-		},
+		data = {},
 		file = false,
 		token = true,
-		tokenCarry = true,
 		isCode = true,
 		exclude = [undefined, ''],
 		codeErrorMessage = true,
-		cacheCb = () => {},
 	} = options
 	const headersConfig: Data = headers
 
 	// get 处理
 	// if (method === 'get' && isObject(data)) options.params = data
 
-	options.url = ajaxUrl('ajax') + '/product' + url
-	options.body = options.body
+	options.url = ajaxUrl('ajax') + url
+	console.log(options.url)
+	if (method.toLowerCase() === 'get' && Object.keys(data).length > 0) {
+		options.url += `?${qs.stringify(data)}`
+	}
+	options.data = data || {}
 	options.method = method
 	options.token = token
 	options.file = file
-	options.storePath = storePath
 	options.isCode = isCode
 	options.codeErrorMessage = codeErrorMessage
 	options.headers = headers
 	options.timeout = timeout
-	options.cacheCb = cacheCb
 
 	// 参数过滤
-	excludeData(body, exclude)
+	excludeData(data, exclude)
 
 	// 上传文件时, 修改 Content-Typ 值
 	if (file) {
 		headersConfig['Content-Type'] = 'application/x-www-form-urlencoded;charset=utf-8'
 	}
-
-	const accesstoken = Cookie.get(tokenKey.access)
-	if (accesstoken && tokenCarry) headersConfig.accesstoken = accesstoken
+	headersConfig.token = store.state.user.userInfo.token
 
 	// 将 Fetch.config 设置为必填(已有值的状态)
 	const op = options as FetchRequired<Fetch.all, keyof Fetch.config>

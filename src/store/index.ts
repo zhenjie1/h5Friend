@@ -1,19 +1,11 @@
 import { createStore, useStore as baseUseStore } from 'vuex'
 import { UseStore } from './type'
-import friendStore from './modules/friend'
-import groupStore from './modules/group'
-import wechatStore from './modules/wechat'
-import userStore from './modules/user'
-import FGStore from './modules/FGstore'
+import userStore from './modules/user/index'
 import storeIndexDB from './storeDB'
 import { cloneDeep } from 'lodash'
 
 export const modules: Data = {
-	friend: friendStore,
-	group: groupStore,
-	wechat: wechatStore,
 	user: userStore,
-	fg: FGStore,
 }
 
 // 拷贝一份 state 的初始化配置

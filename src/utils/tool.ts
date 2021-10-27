@@ -1,8 +1,10 @@
-import { curry, isObject } from 'lodash'
+import { curry, isObject, debounce } from 'lodash'
+import { Toast } from 'vant'
 import dayjs from 'dayjs'
 import { unref, Ref, ref, onMounted } from 'vue'
 import { MaybeRef, templateRef } from '@vueuse/core'
 import { GetFieldType } from 'typings/utils'
+import { api } from '@/api'
 
 // 检查类型
 const typeCheck = curry((type: any, val: any) => {
@@ -119,7 +121,6 @@ export function addScript(url: string) {
 
 		scriptEl.onerror = function (e) {
 			console.error(e)
-			debugger
 			reject(e)
 		}
 
@@ -201,4 +202,45 @@ export function getObjValue<TData, TPath extends string, TDefault = GetFieldType
 		.reduce<GetFieldType<TData, TPath>>((value, key) => (value as any)?.[key], data as any)
 
 	return value !== undefined ? value : (defaultValue as TDefault)
+}
+
+/**
+ * 滚动到底部执行回调
+ * @param {Element} el 要监听的dom
+ * @param {Function} fn 回调函数
+ * @param {number} offset 距离底部
+ * @returns {void}
+ */
+export function scrollBottom(el: Element, fn: Function, offset = 0): void {
+	el.addEventListener(
+		'scroll',
+		debounce(() => {
+			const scrollHeight = el.scrollHeight
+			const clientHeight = el.clientHeight
+
+			if (scrollHeight - (el.scrollTop + offset) <= clientHeight) {
+				fn && fn()
+			}
+		}, 200)
+	)
+}
+
+// 上传照片
+export function uploadImage(files: File[]): Promise<string[]> {
+	files = Array.from(files)
+	const all = files.map((file, index) => {
+		const formData = new FormData()
+		formData.append('file', file)
+		return api.tool
+			.uploadImage(formData)
+			.then((res: any) => {
+				return res.data?.url
+			})
+			.catch((err) => {
+				err.index = index
+				if (err.msg) Toast(err.msg)
+				throw err
+			})
+	})
+	return Promise.all(all)
 }

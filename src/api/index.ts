@@ -1,28 +1,11 @@
+import * as home from './home'
 import * as login from './login'
-import * as chat from './chat'
-import * as user from './user'
-import * as friend from './friend'
-import * as group from './group'
-import * as conver from './conversation'
-import * as keyword from './keyword'
-import * as wechatList from './pageWechatList'
-import * as wechatGroup from './wechatGroup'
-import * as customer from './customer'
-import * as hello from './hello'
-
-export * from './wechatGroup'
-export * from './hello'
+import * as tool from './tool'
+import * as audit from './audit'
 
 export const api = {
+	home,
 	login,
-	chat,
-	user,
-	friend,
-	group,
-	keyword,
-	conver,
-	hello,
-	customer,
-	wechatList,
-	wechatGroup,
+	tool,
+	audit,
 }

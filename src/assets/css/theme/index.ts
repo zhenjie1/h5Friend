@@ -12,7 +12,7 @@ const isRgb = (rgb: string) => /^(rgb)a?/.test(rgb)
 
 // 添加主题颜色
 export function appentTheme() {
-	const theme = blackTheme
+	const theme = defaultTheme
 	const bodyDeclaration = getComputedStyle(document.body)
 
 	// 循环生成透明度

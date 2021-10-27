@@ -9,12 +9,12 @@ const data: Data = {
 	RG: '255',
 	RB: '255',
 
-	main: 'rgb(24, 144, 255)',
+	main: 'rgb(40, 8, 255)',
 	AppLeftMenuColor: 'var(--C40)' /* 左侧菜单背景颜色 */,
 	menuBgColor: 'transparent' /* 菜单颜色 */,
 	bg: {
 		/* 背景颜色 */
-		color: 'var(--C86)' /* 背景颜色 */,
+		color: 'rgb(24, 24, 24)' /* 背景颜色 */,
 		hover: 'var(--R4)' /* 鼠标经过时的颜色 */,
 		check: 'var(--R8)' /* 选中时的颜色 */,
 		mask: 'var(--R10)' /* 遮罩层的背景颜色 dialog、select 等 */,

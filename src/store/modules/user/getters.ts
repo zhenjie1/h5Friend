@@ -5,17 +5,8 @@ import { State } from './state'
 
 type GroupGettersParam = ObjReturnType<Getters>
 
-export type Getters = {
-	groupG1(
-		state: State,
-		getters: GroupGettersParam,
-		rootState: RootState,
-		rootGetters: RootGettersReturn
-	): void
-}
+export type Getters = {}
 
-const groupGetters: GetterTree<State, RootState> & Getters = {
-	groupG1: (state, g, R, RG) => 'state.badge',
-}
+const groupGetters: GetterTree<State, RootState> & Getters = {}
 
 export default groupGetters
