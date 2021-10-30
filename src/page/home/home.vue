@@ -1,12 +1,13 @@
 <template>
 	<div class="bg-R-0 home-page">
-		<div class="container">
+		<div class="page-container">
 			<div class="boxContent">
 				<div class="box" @click="toNav('/home/put')">放入</div>
 				<div class="box" @click="toNav('/home/pick')">抽取</div>
 				<div class="box" @click="toNav('/home/putList')">放入列表</div>
 				<div class="box" @click="toNav('/home/pickList')">抽取列表</div>
 				<div class="box" @click="toNav('/audit')">审核列表</div>
+				<div class="box" @click="toNav('/complaint')">投诉建议</div>
 			</div>
 		</div>
 		<global-view></global-view>
@@ -14,7 +15,6 @@
 </template>
 
 <script lang="ts">
-import { api } from '@/api'
 import { useStore } from '@/store'
 
 import { defineComponent } from 'vue'
@@ -43,7 +43,7 @@ export default defineComponent({
 </style>
 
 <style lang="scss" scoped>
-.container {
+.page-container {
 	height: 100vh;
 	background-image: linear-gradient(-135deg, #5d58e8, #3731be);
 	display: flex;

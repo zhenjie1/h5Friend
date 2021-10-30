@@ -5,7 +5,7 @@ import { join } from 'path'
 
 const cssPath = join(__dirname, 'src/assets/css/scssConfig.scss').replace(/\\/g, '/')
 export default defineConfig({
-	base: '/',
+	base: '/h5/',
 	plugins: [
 		vue(),
 		styleImport({
@@ -21,6 +21,11 @@ export default defineConfig({
 	// optimizeDeps: {
 	// 	include: ['rxjs/fetch'],
 	// },
+	// publicDir: 'h5',
+	build: {
+		// outDir: 'h5',
+		// assetsDir: 'h5',
+	},
 	resolve: {
 		alias: {
 			'@': join(__dirname, 'src/'),

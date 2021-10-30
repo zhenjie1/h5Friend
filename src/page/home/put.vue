@@ -1,6 +1,5 @@
 <template>
 	<div class="putContainer">
-		<!-- 可以使用 CellGroup 作为容器 -->
 		<van-form @submit="submit">
 			<van-cell-group>
 				<van-field
@@ -23,7 +22,7 @@
 					:rules="[{ required: true, message: '请填写您的年龄' }]"
 				/>
 				<van-field
-					v-model="form.sex"
+					v-model="sexCheck.name"
 					is-link
 					label-align="right"
 					label-width="60"
@@ -78,6 +77,14 @@
 				/>
 			</van-cell-group>
 
+			<van-action-sheet
+				v-model:show="show.selectSex"
+				description="选择性别"
+				:actions="sexData"
+				cancel-text="取消"
+				@select="changeSex"
+			></van-action-sheet>
+
 			<van-popup v-model:show="show.city" position="bottom">
 				<van-area
 					:area-list="areaList"
@@ -85,9 +92,9 @@
 					@cancel="show.city = false"
 				></van-area>
 			</van-popup>
-			<van-popup v-model:show="show.selectSex" position="bottom">
-				<van-picker :columns="['男', '女']" @confirm="changeSex"></van-picker>
-			</van-popup>
+			<!-- <van-popup v-model:show="show.selectSex" position="bottom">
+				<van-picker :columns="['小哥哥', '小姐姐']" @confirm="changeSex"></van-picker>
+			</van-popup> -->
 
 			<upload-file
 				ref="uploadFile"
@@ -134,7 +141,6 @@ export default defineComponent({
 		const form: Data = reactive({
 			wxid: '',
 			age: '',
-			sex: '男',
 			sexKey: 1,
 			city: '',
 			introduction: '',
@@ -143,6 +149,15 @@ export default defineComponent({
 			address: [''],
 			hobby: {} as Data,
 			school: {} as Data,
+		})
+
+		const sexData = [
+			{ name: '小哥哥', id: 1 },
+			{ name: '小姐姐', id: 2 },
+		]
+
+		const sexCheck = computed(() => {
+			return sexData.find((v) => v.id == form.sexKey)
 		})
 
 		const initForm = cloneDeep(form)
@@ -154,9 +169,6 @@ export default defineComponent({
 
 			uploadFile.value?.clear()
 		}
-		// onMounted(() => {
-		console.log(getRef('uploadFile'))
-		// })
 
 		const address = computed(() => {
 			if (form.address.length !== 3) return ''
@@ -172,9 +184,8 @@ export default defineComponent({
 		})
 
 		// 修改性别
-		const changeSex = (val: string, index: number) => {
-			form.sex = val
-			form.sexKey = index + 1
+		const changeSex = (item: Data) => {
+			form.sexKey = item.id
 			show.selectSex = false
 		}
 
@@ -195,6 +206,8 @@ export default defineComponent({
 			areaList,
 			address,
 			form,
+			sexCheck,
+			sexData,
 			show,
 			submitLoading,
 			changeSex,
@@ -216,6 +229,7 @@ export default defineComponent({
 				const data = (await api.home.enterNote(params)) as Data
 				Toast(data.msg)
 				initFormFn()
+				router.replace('/home/putList')
 			},
 		}
 	},

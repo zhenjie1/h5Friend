@@ -48,19 +48,41 @@ export const enterNote = (data: Data) =>
 	)
 
 // 放入纸条 -- 列表
-export const getPutList = () =>
+export const getPutList = (data: Data) =>
 	APIFetch(
 		{
 			url: '/api/scrip/put_list',
+			data,
+		},
+		'data.data'
+	)
+
+// 抽纸条
+export const pickNote = (data: Data) =>
+	APIFetch(
+		{
+			url: '/api/matching/filter',
+			data,
 		},
 		'data.data'
 	)
 
 // 抽取纸条 -- 列表
-export const getPickList = () =>
+export const getPickList = (data: Data) =>
 	APIFetch(
 		{
 			url: '/api/matching/list',
+			data,
 		},
 		'data.data'
+	)
+
+// 纸条 - 切换显示隐藏
+export const toggleShow = (scrip_id: number, show: 1 | 2) =>
+	APIFetch(
+		{
+			url: '/api/scrip/toggle',
+			data: { scrip_id, show },
+		},
+		'data'
 	)

@@ -1,5 +1,5 @@
 <template>
-	<div class="putList">
+	<div ref="scroll" class="putList">
 		<ul class="container pt-5">
 			<order-item v-for="(item, index) in list" :key="index" :data="item"></order-item>
 		</ul>
@@ -8,6 +8,7 @@
 
 <script lang="ts">
 import { api } from '@/api'
+import usePage from '@/assets/js/page'
 import orderItem from '@/components/common/orderItem.vue'
 import { defineComponent, ref } from 'vue'
 
@@ -16,9 +17,20 @@ export default defineComponent({
 	components: { orderItem },
 	setup() {
 		const list = ref<Data[]>([])
-		api.home.getPickList().then((res) => {
-			list.value = res
+		usePage({
+			el: 'scroll',
+			api: (page) => {
+				return api.home.getPickList({ limit: page.size, page: page.index })
+			},
+			fn: (res) => {
+				list.value = [...list.value, ...res.data]
+			},
+			isInit: false,
 		})
+
+		// api.home.getPickList().then((res) => {
+		// 	list.value = res
+		// })
 		return {
 			list,
 		}

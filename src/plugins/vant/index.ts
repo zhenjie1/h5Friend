@@ -11,20 +11,32 @@ import {
 	Area,
 	Toast,
 	Icon,
+	Image as VanImage,
+	ImagePreview,
+	NavBar,
+	Lazyload,
+	ActionSheet,
+	Switch,
 } from 'vant'
 import 'css/vant.scss'
 
 export default function initVant(app: App<Element>) {
+	app.use(Lazyload)
 	app.use(Icon)
+	app.use(ActionSheet)
 	app.use(Area)
 	app.use(Button)
 	app.use(Uploader)
 	app.use(Form)
+	app.use(NavBar)
+	app.use(VanImage)
+	app.use(ImagePreview)
 
 	app.use(Cell)
 	app.use(CellGroup)
 	app.use(Field)
 	app.use(Toast)
+	app.use(Switch)
 
 	app.use(Popup)
 	app.use(Picker)

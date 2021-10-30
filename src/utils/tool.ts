@@ -185,6 +185,25 @@ export function dateTrans(date: dayjs.ConfigType, len = 20): string {
 }
 
 /**
+ * 复制文字
+ *
+ * @param {string} text 要复制的文字
+ * @returns {void}
+ */
+export function copyText(text: string) {
+	const input = document.createElement('input')
+	input.setAttribute('readonly', 'readonly')
+	input.setAttribute('value', text)
+	document.body.appendChild(input)
+	input.select()
+	input.setSelectionRange(0, 9999)
+	if (document.execCommand('copy')) {
+		document.execCommand('copy')
+	}
+	document.body.removeChild(input)
+}
+
+/**
  * 读取对象上的值
  *
  * @param {object} data 源数据
