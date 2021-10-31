@@ -49,7 +49,7 @@ export default defineComponent({
 		})
 
 		const route = useRoute()
-		const cityId = computed(() => route.params.id)
+		const cityId = computed(() => (route.params.id === '' ? undefined : route.params.id))
 
 		const search = ref('')
 		watch(

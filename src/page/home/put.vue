@@ -59,7 +59,7 @@
 					label-width="60"
 					label-align="right"
 					is-link
-					@click="toNav(`put/school/${form.city?.pid}`)"
+					@click="toSchool"
 				></van-field>
 				<van-field
 					v-model="form.introduction"
@@ -156,8 +156,8 @@ export default defineComponent({
 			{ name: '小姐姐', id: 2 },
 		]
 
-		const sexCheck = computed(() => {
-			return sexData.find((v) => v.id == form.sexKey)
+		const sexCheck = computed<{ name: string; id: number }>(() => {
+			return sexData.find((v) => v.id == form.sexKey)!
 		})
 
 		const initForm = cloneDeep(form)
@@ -239,6 +239,11 @@ export default defineComponent({
 		})
 	},
 	methods: {
+		toSchool() {
+			let path = 'put/school/'
+			if (this.form.city) path += this.form.city.pid
+			this.toNav(path)
+		},
 		afterRead(files: Data[]) {
 			if (!Array.isArray(files)) files = [files]
 			if (files.length > 0) {
