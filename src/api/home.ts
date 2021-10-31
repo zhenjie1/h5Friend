@@ -24,11 +24,13 @@ export const getCityCode = (city: string) =>
 	)
 
 // 获取学校
-export const getSchool = (page = 1, keyword?: string) =>
+export const getSchool = (data: Data, page = 1, keyword?: string) =>
 	APIFetch(
 		{
 			url: '/api/school/list',
+			method: 'get',
 			data: {
+				...data,
 				page,
 				limit: 30,
 				keyword,

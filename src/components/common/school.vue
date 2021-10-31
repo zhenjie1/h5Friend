@@ -24,7 +24,7 @@ import { debounce } from 'lodash'
 import { api } from '@/api'
 import { scrollBottom } from '@/utils'
 import { computed, defineComponent, ref, watch } from 'vue'
-import { useRouter } from 'vue-router'
+import { useRoute, useRouter } from 'vue-router'
 import { homeBus } from '@/page/home/put.vue'
 
 export default defineComponent({
@@ -48,6 +48,9 @@ export default defineComponent({
 			return newData
 		})
 
+		const route = useRoute()
+		const cityId = computed(() => route.params.id)
+
 		const search = ref('')
 		watch(
 			search,
@@ -68,7 +71,13 @@ export default defineComponent({
 			page.index++
 			page.lock = true
 			api.home
-				.getSchool(page.index, search.value)
+				.getSchool(
+					{
+						china_id: isInit ? undefined : cityId.value,
+					},
+					page.index,
+					search.value
+				)
 				.then((res) => {
 					list.value = isInit ? res.data : [...list.value, ...res.data]
 

@@ -43,15 +43,6 @@
 					@click="toNav('put/hobby')"
 				></van-field>
 				<van-field
-					v-model="form.school.name"
-					label="学校"
-					readonly
-					label-width="60"
-					label-align="right"
-					is-link
-					@click="toNav('put/school')"
-				></van-field>
-				<van-field
 					v-model="address"
 					label="地址"
 					label-align="right"
@@ -61,6 +52,15 @@
 					@click="changeShow('city', true)"
 				>
 				</van-field>
+				<van-field
+					v-model="form.school.name"
+					label="学校"
+					readonly
+					label-width="60"
+					label-align="right"
+					is-link
+					@click="toNav(`put/school/${form.city?.pid}`)"
+				></van-field>
 				<van-field
 					v-model="form.introduction"
 					rows="3"
@@ -142,10 +142,10 @@ export default defineComponent({
 			wxid: '',
 			age: '',
 			sexKey: 1,
-			city: '',
+			city: undefined,
+			cityText: '',
 			introduction: '',
 			imageUrls: [],
-			cityId: 0,
 			address: [''],
 			hobby: {} as Data,
 			school: {} as Data,
@@ -196,8 +196,7 @@ export default defineComponent({
 			const result = await api.home.getCityCode(city.name)
 
 			show.city = false
-			form.cityId = result.data[0]?.id
-			console.log(province.name, city.name, district.name, result)
+			form.city = result.data[0]
 		}
 
 		const submitLoading = ref(false)
@@ -224,7 +223,7 @@ export default defineComponent({
 					hobby_ids: form.hobby.id,
 					school_id: form.school.id,
 					age: form.age,
-					china_id: form.cityId == 0 ? undefined : form.cityId,
+					china_id: form.city?.id,
 				}
 				const data = (await api.home.enterNote(params)) as Data
 				Toast(data.msg)
@@ -235,7 +234,7 @@ export default defineComponent({
 	},
 	mounted() {
 		AMapCollection.getUserPositionInfo().then((res) => {
-			this.form.city = res.addressComponent.city
+			this.form.cityText = res.addressComponent.city
 			console.log(this.form.city)
 		})
 	},

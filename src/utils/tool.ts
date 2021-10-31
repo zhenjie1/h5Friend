@@ -1,5 +1,6 @@
 import { curry, isObject, debounce } from 'lodash'
 import { Toast } from 'vant'
+import lrz from 'lrz'
 import dayjs from 'dayjs'
 import { unref, Ref, ref, onMounted } from 'vue'
 import { MaybeRef, templateRef } from '@vueuse/core'
@@ -248,17 +249,23 @@ export function scrollBottom(el: Element, fn: Function, offset = 0): void {
 export function uploadImage(files: File[]): Promise<string[]> {
 	files = Array.from(files)
 	const all = files.map((file, index) => {
-		const formData = new FormData()
-		formData.append('file', file)
-		return api.tool
-			.uploadImage(formData)
+		return lrz(file)
 			.then((res: any) => {
-				return res.data?.url
+				const formData = new FormData()
+				formData.append('file', new File([res.file], file.name))
+				return api.tool
+					.uploadImage(formData)
+					.then((res: any) => {
+						return res.data?.url
+					})
+					.catch((err) => {
+						err.index = index
+						if (err.msg) Toast(err.msg)
+						throw err
+					})
 			})
-			.catch((err) => {
-				err.index = index
-				if (err.msg) Toast(err.msg)
-				throw err
+			.catch(function (err: any) {
+				console.error(err)
 			})
 	})
 	return Promise.all(all)

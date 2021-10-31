@@ -11,7 +11,6 @@
 						size="20px"
 						@change="toggleShow(item)"
 					></van-switch>
-					{{ item.showData }}
 				</template>
 			</order-item>
 		</ul>

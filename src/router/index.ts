@@ -21,7 +21,7 @@ const routes: RouteRecordRaw[] = [
 						meta: { title: '选择爱好' },
 					},
 					{
-						path: 'school',
+						path: 'school/:id?',
 						component: () => import('@/components/common/school.vue'),
 						meta: { title: '选择学校' },
 					},

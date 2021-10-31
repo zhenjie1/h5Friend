@@ -16,6 +16,8 @@ import {
 	NavBar,
 	Lazyload,
 	ActionSheet,
+	Swipe,
+	SwipeItem,
 	Switch,
 } from 'vant'
 import 'css/vant.scss'
@@ -31,6 +33,9 @@ export default function initVant(app: App<Element>) {
 	app.use(NavBar)
 	app.use(VanImage)
 	app.use(ImagePreview)
+
+	app.use(Swipe)
+	app.use(SwipeItem)
 
 	app.use(Cell)
 	app.use(CellGroup)

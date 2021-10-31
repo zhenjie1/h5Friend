@@ -26,7 +26,11 @@
 				</p>
 			</div>
 			<div class="hobby border-l border-border-color pl-3">
-				<div v-for="(hobbyItem, i) in hobbyData" :key="i" class="hobbyItem mb-1">
+				<div
+					v-for="(hobbyItem, i) in hobbyData"
+					:key="i"
+					class="hobbyItem mb-1 whitespace-nowrap"
+				>
 					{{ hobbyItem }}
 				</div>
 				<p v-if="hobbyData.length == 0" class="text-sm text-text-light">暂无爱好</p>
