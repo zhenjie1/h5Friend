@@ -19,7 +19,7 @@ const data: Data = {
 	menuBgColor: 'transparent' /* 菜单颜色 */,
 	bg: {
 		/* 背景颜色 */
-		color: 'var(--C97)' /* 背景颜色 */,
+		color: 'var(--C0)' /* 背景颜色 */,
 		hover: 'var(--R4)' /* 鼠标经过时的颜色 */,
 		check: 'var(--R8)' /* 选中时的颜色 */,
 		mask: 'var(--C96)' /* 遮罩层的背景颜色 dialog、select 等 */,

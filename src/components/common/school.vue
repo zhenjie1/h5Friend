@@ -20,93 +20,49 @@
 </template>
 
 <script lang="ts">
-import { debounce } from 'lodash'
 import { api } from '@/api'
-import { scrollBottom } from '@/utils'
-import { computed, defineComponent, ref, watch } from 'vue'
+import { computed, defineComponent, ref } from 'vue'
 import { useRoute, useRouter } from 'vue-router'
 import { homeBus } from '@/page/home/put.vue'
+import usePage from '@/assets/js/page'
 
 export default defineComponent({
 	name: 'School',
 	setup() {
 		const router = useRouter()
-		const page = {
-			index: 0,
-			size: 30,
-			lock: false,
-			last_page: 100,
-		}
+		const route = useRoute()
 
-		const list = ref<Data[]>([])
+		const search = ref('')
+		const cityId = computed(() => (route.params.id === '' ? undefined : route.params.id))
+		const list = usePage({
+			el: 'box',
+			api: (page) =>
+				api.home.getSchool(
+					{ china_id: page.isInit ? undefined : cityId.value },
+					page.index,
+					search.value
+				),
+			watch: search,
+		})
 		const listData = computed(() => {
 			const reg = new RegExp(`(.*)(${search.value})(.*)`, 'ig')
-			const newData = list.value.map((v) => {
+			const newData = list.value.data.map((v) => {
 				v.checkName = v.name.replace(reg, '$1<span class="schoolMatchText">$2</span>$3')
 				return v
 			})
 			return newData
 		})
 
-		const route = useRoute()
-		const cityId = computed(() => (route.params.id === '' ? undefined : route.params.id))
-
-		const search = ref('')
-		watch(
-			search,
-			debounce((val) => {
-				console.log(val)
-				loadMoreData(true)
-			}, 300)
-		)
-
-		// 获取下一页数据
-		const loadMoreData = (isInit = false) => {
-			const { index, lock, last_page } = page
-			if (isInit) page.index = 0
-
-			if (lock) return console.log('正在请求中...')
-			if (!isInit && index >= last_page) return console.log('没有更多了')
-
-			page.index++
-			page.lock = true
-			api.home
-				.getSchool(
-					{
-						china_id: isInit ? undefined : cityId.value,
-					},
-					page.index,
-					search.value
-				)
-				.then((res) => {
-					list.value = isInit ? res.data : [...list.value, ...res.data]
-
-					page.last_page = res.last_page
-					console.log(res)
-				})
-				.finally(() => (page.lock = false))
-		}
-		loadMoreData()
-
 		return {
 			search,
 			list,
 			listData,
-			loadMoreData,
+			// loadMoreData,
 			clickItem(item: Data) {
 				homeBus.emit('setSchool', item)
 				router.back()
 			},
 		}
-	},
-	mounted() {
-		scrollBottom(
-			this.$refs.box as Element,
-			() => {
-				this.loadMoreData()
-			},
-			200
-		)
 	},
 })
 </script>

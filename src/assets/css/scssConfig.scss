@@ -12,3 +12,11 @@
 	text-overflow: ellipsis;
 	white-space: nowrap;
 }
+
+// 添加浏览器前缀
+@mixin prefix ($key, $val) {
+	-webkit-#{$key}: $val;
+	-o-#{$key}: $val;
+	-moz-#{$key}: $val;
+	#{$key}: $val;
+}

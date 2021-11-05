@@ -40,7 +40,6 @@ export function appentTheme() {
 			rgb = rgb.replace(/ /g, '')
 
 			if (!isRgb(rgb)) {
-				console.log(isTheme ? '主题颜色' : '常量颜色', `${key} 不是 rgb 格式 ${rgb}`)
 				return total
 			}
 			total.push({ name: key, color: rgb })

@@ -5,6 +5,8 @@ import './after'
 import { GetFieldType } from 'typings/utils'
 import { getObjValue } from '..'
 import { Toast } from 'vant'
+import store from '@/store'
+import { wxAuthStart } from '@/assets/js/authMixin'
 
 /**
  * 发送请求
@@ -38,7 +40,17 @@ export default function APIFetch<
 			return getObjValue(response, path)
 		})
 		.catch((err) => {
+			const { data, status } = err.response
+
+			if (status === 401) loginAuth()
+			console.log('error', status, data)
 			throw err
 		})
 	return app
+}
+
+// 401 错误时, 重新授权
+function loginAuth() {
+	store.commit('user/userinfo', {} as any)
+	wxAuthStart()
 }

@@ -20,7 +20,6 @@ export default defineComponent({
 		const list = ref<Data[]>([])
 
 		api.home.getHobby().then((res: Data[]) => {
-			console.log(res)
 			list.value = res
 		})
 		return {

@@ -50,7 +50,7 @@ export default defineConfig({
 		proxy: {
 			'/zs': {
 				// target: 'http://192.168.3.105:3010',
-				target: 'http://152.136.201.85/index.php',
+				target: 'https://www.datingfriend.xyz/index.php',
 				// ws: true,
 				changeOrigin: true,
 				rewrite: (path) => path.replace(/^\/zs/, ''),

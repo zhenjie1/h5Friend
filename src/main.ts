@@ -2,10 +2,6 @@ import { createApp } from 'vue'
 import VConsole from 'vconsole'
 import AppTemp from '@/App.vue'
 
-// const vconsole = new VConsole({})
-
-// import 'js/reload'
-
 import store from '@/store'
 import initGlobalComponent from '@/plugins/globalComponents/globalComponents'
 
@@ -18,6 +14,9 @@ import 'css/wechat.scss'
 import router from './router/index'
 import { appentTheme } from './assets/css/theme'
 import initVant from './plugins/vant'
+import { isDev } from './utils'
+
+// const vconsole = !isDev && new VConsole({})
 
 // 添加主题
 appentTheme()

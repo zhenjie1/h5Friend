@@ -11,10 +11,17 @@
 
 <script lang="ts">
 import { defineComponent } from 'vue'
+import { useStore } from './store'
+// import { isDev } from './utils'
 
 export default defineComponent({
 	name: 'AppPage',
 	components: {},
+	setup() {
+		const store = useStore()
+		console.log('userinfo', store.state.user.userInfo)
+		// isDev && store.dispatch('user/initUserInfo')
+	},
 })
 </script>
 

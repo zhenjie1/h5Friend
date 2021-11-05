@@ -1,7 +1,7 @@
 import { createStore, useStore as baseUseStore } from 'vuex'
 import { UseStore } from './type'
 import userStore from './modules/user/index'
-import storeIndexDB from './storeDB'
+import createPersistedState from 'vuex-persistedstate'
 import { cloneDeep } from 'lodash'
 
 export const modules: Data = {
@@ -16,7 +16,7 @@ for (const i in modules) rootInitState[i] = cloneDeep(modules[i].state)
 const store = createStore({
 	modules,
 	strict: true,
-	plugins: [storeIndexDB()],
+	plugins: [createPersistedState()],
 }) as UseStore
 
 export default store

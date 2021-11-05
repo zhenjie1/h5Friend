@@ -1,6 +1,6 @@
 <template>
 	<div class="home-page">
-		<van-swipe class="swiper">
+		<van-swipe class="swiper" :autoplay="5000">
 			<van-swipe-item>
 				<img
 					src="../../assets/images/banner/banner1.png"
@@ -47,39 +47,49 @@
 				is-link
 				@click="toNav('/home/putList')"
 			></van-cell>
+			<van-cell size="large" is-link title="抽取列表" @click="toNav('/home/pickList')" />
 			<van-cell
-				title="抽取列表"
+				v-if="userInfo.identity === 2"
+				title="审核列表"
 				size="large"
 				is-link
-				@click="toNav('/home/pickList')"
+				@click="toNav('/audit')"
 			></van-cell>
-			<van-cell title="审核列表" size="large" is-link @click="toNav('/audit')"></van-cell>
 			<van-cell title="投诉建议" size="large" is-link @click="toNav('/complaint')"></van-cell>
 		</van-cell-group>
+		<!-- <van-button class="resetAuth" @click="resetAuth">重新授权 方便测试, 正式会删除</van-button> -->
 		<global-view></global-view>
 	</div>
 </template>
 
 <script lang="ts">
+import authMixin from '@/assets/js/authMixin'
 import { useStore } from '@/store'
 
 import { defineComponent } from 'vue'
 import { useRouter } from 'vue-router'
+import { mapState } from 'vuex'
 
 export default defineComponent({
+	mixins: [authMixin()],
 	setup() {
 		const router = useRouter()
-
 		const store = useStore()
-		store.dispatch('user/initUserInfo')
+
 		return {
+			resetAuth() {
+				store.commit('user/userinfo', {} as any)
+				location.reload()
+			},
 			toNav(path: string) {
-				console.log(path)
 				router.push({
 					path,
 				})
 			},
 		}
+	},
+	computed: {
+		...mapState('user', ['userInfo']),
 	},
 })
 </script>
@@ -90,13 +100,19 @@ export default defineComponent({
 
 <style lang="scss" scoped>
 .home-page {
+	.resetAuth {
+		margin: 20px auto;
+		display: block;
+	}
 	// background-image: linear-gradient(-135deg, #2721d1, #4d0c95);
 	// background-image: linear-gradient(-135deg, #5d58e8, #3731be);
 	.swiper {
 		width: 90%;
 		border-radius: 2px;
 		margin: 20px auto;
-		box-shadow: 0 4px 16px rgba(0, 0, 0, 0.1);
+		@include prefix(box-shadow, 0 4px 16px rgba(0, 0, 0, 0.1));
+		// box-shadow: 0 4px 16px rgba(0, 0, 0, 0.1);
+		// -webkit-box-shadow: 0 4px 16px rgba(0, 0, 0, 0.1);
 		.bannerImage {
 			height: 36vw;
 		}
@@ -134,17 +150,23 @@ export default defineComponent({
 		@apply grid grid-cols-2 gap-4;
 		margin: auto;
 		.btnContainer {
-			@apply flex;
+			box-shadow: 0 3px 8px #f0f0f0;
+			border: 1px solid #f5f5f5;
+			@apply text-center py-10 px-5 rounded-t;
 			.icon {
-				@apply flex-shrink-0 w-6 h-6 text-center leading-6 bg-main text-white rounded-full text-xs;
+				@apply flex-shrink-0 w-12 h-12 text-center bg-main text-white rounded-full text-xl;
+				line-height: 3rem;
 			}
 			&.pick .icon {
 				background-color: #ef6d21;
 			}
 			.info {
-				@apply flex-1 ml-3;
+				@apply flex-1;
+				.title {
+					@apply font-medium mt-5;
+				}
 				.desc {
-					@apply text-xs text-text-gray;
+					@apply text-xs text-text-gray mt-1;
 				}
 			}
 		}

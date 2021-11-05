@@ -1,7 +1,7 @@
 <template>
 	<div ref="auditContent" class="fullScreen auditContent pt-5">
 		<order-item
-			v-for="(item, index) in list"
+			v-for="(item, index) in list.data"
 			:key="index"
 			class="orderItem"
 			shrink-image
@@ -35,6 +35,7 @@
 				</div>
 			</template>
 		</order-item>
+		<p v-if="list.data.length == 0" class="text-gray text-center mt-10">暂无数据</p>
 
 		<van-action-sheet
 			v-model:show="show.reject"
@@ -59,24 +60,19 @@ export default defineComponent({
 	components: { orderItem },
 	setup() {
 		// 数据
-		const list = ref<Data[]>([])
-		// 选中的索引
-		const checkIndex = ref<number>(0)
-		// 计算属性 - 返回选中的 item 数据
-		const checkItem = computed(() => {
-			return list.value[checkIndex.value]
-		})
-
-		usePage({
+		const list = usePage({
 			el: 'auditContent',
 			api: (page) => {
 				return api.audit.getToBeReviewed({ limit: page.size, page: page.index })
 			},
-			fn: (res) => {
-				list.value = [...list.value, ...res.data]
-			},
-			isInit: false,
 		})
+		// 选中的索引
+		const checkIndex = ref<number>(0)
+		// 计算属性 - 返回选中的 item 数据
+		const checkItem = computed(() => {
+			return list.value.data[checkIndex.value]
+		})
+
 		const rejectReason = [{ name: '信息不符' }, { name: '信息违规' }, { name: '没有理由' }]
 
 		const show = reactive({
@@ -103,12 +99,12 @@ export default defineComponent({
 				await api.audit.audit(item.id, 1)
 				show.reject = false
 				Toast('已通过')
-				list.value.splice(checkIndex.value, 1)
+				list.value.data.splice(checkIndex.value, 1)
 			},
 			async onReject(item: Data) {
 				await api.audit.audit(checkItem.value.id, 2, item.name)
 				Toast('已拒绝')
-				list.value.splice(checkIndex.value, 1)
+				list.value.data.splice(checkIndex.value, 1)
 				show.reject = false
 			},
 			clickItem(index: number) {

@@ -6,5 +6,6 @@ declare global {
 	}
 	interface Window {
 		AMap: any
+		WeixinJSBridge: any
 	}
 }

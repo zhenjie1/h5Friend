@@ -5,10 +5,11 @@
 			<van-cell-group>
 				<van-field
 					v-model="form.age"
+					size="large"
 					label="年龄"
 					required
 					readonly
-					label-width="40"
+					label-width="46"
 					label-align="right"
 					placeholder="请输入你的年龄"
 					:rules="[{ required: true, message: '请填写您的年龄' }]"
@@ -16,9 +17,10 @@
 				/>
 				<van-field
 					v-model="sexCheck.name"
+					size="large"
 					is-link
 					label-align="right"
-					label-width="40"
+					label-width="46"
 					readonly
 					label="性别"
 					required
@@ -28,31 +30,51 @@
 				/>
 				<van-field
 					v-model="form.hobby.name"
+					size="large"
 					label="爱好"
-					label-width="40"
-					is-link
+					label-width="46"
+					clearable
 					label-align="right"
 					readonly
 					@click="toNav('pick/hobby')"
-				></van-field>
+				>
+					<template #button>
+						<van-icon
+							:name="form.hobby.name ? 'clear' : 'arrow'"
+							@click.stop="form.hobby = {}"
+						/>
+					</template>
+				</van-field>
 				<van-field
 					v-model="form.school.name"
+					size="large"
 					label="学校"
 					readonly
-					label-width="40"
+					clearable
+					label-width="46"
 					label-align="right"
-					is-link
 					@click="toNav('pick/school')"
-				></van-field>
+				>
+					<template #button>
+						<van-icon
+							:name="form.school.name ? 'clear' : 'arrow'"
+							@click.stop="form.school = {}"
+						/>
+					</template>
+				</van-field>
 				<van-field
 					v-model="address"
+					size="large"
 					label="地址"
 					label-align="right"
-					label-width="40"
+					label-width="46"
 					readonly
-					is-link
+					clearable
 					@click="changeShow('city', true)"
 				>
+					<template #button>
+						<van-icon :name="address ? 'clear' : 'arrow'" @click.stop="clearAddress" />
+					</template>
 				</van-field>
 			</van-cell-group>
 
@@ -67,6 +89,7 @@
 			<van-popup v-model:show="show.city" position="bottom">
 				<van-area
 					:area-list="areaList"
+					:value="form.adcode"
 					:columns-num="2"
 					@confirm="changeLocation"
 					@cancel="show.city = false"
@@ -91,6 +114,7 @@
 				title="选择年龄区间"
 				:columns="ageColumns"
 				@change="ageChange"
+				@cancel="show.age = false"
 				@confirm="show.age = false"
 			></van-picker>
 		</van-popup>
@@ -104,6 +128,8 @@ import { api } from '@/api'
 import { computed, defineComponent, reactive, ref, watch } from 'vue'
 import { useRouter } from 'vue-router'
 import { homeBus } from './put.vue'
+import { Toast } from 'vant'
+import AMapCollection from '@/utils/map'
 
 export default defineComponent({
 	name: 'Pick',
@@ -113,7 +139,7 @@ export default defineComponent({
 		const form: Data = reactive({
 			age: '',
 			sexKey: 1,
-			city: '',
+			adcode: '', // 选中的城市编码
 			cityId: 0,
 			address: [''],
 			hobby: {} as Data,
@@ -146,8 +172,12 @@ export default defineComponent({
 
 			show.city = false
 			form.cityId = result.data[0]?.id
-			console.log(province.name, city.name, result)
 		}
+		AMapCollection.getUserPositionInfo().then((res) => {
+			const { province, city, district, adcode } = res.addressComponent
+			form.adcode = adcode
+			changeLocation([{ name: province }, { name: city }, { name: district }])
+		})
 
 		const sexCheck = computed(() => {
 			return sexData.find((v) => v.id == form.sexKey)
@@ -171,15 +201,15 @@ export default defineComponent({
 			// 第一列
 			{
 				values: createAge(14, 80),
-				defaultIndex: 4,
+				defaultIndex: 6,
 			},
 			// 第二列
 			{
 				values: createAge(15, 80),
-				defaultIndex: 5,
+				defaultIndex: 9,
 			},
 		]
-		const ageValue = ref([18, 20])
+		const ageValue = ref([20, 24])
 		watch(
 			ageValue,
 			() => {
@@ -216,19 +246,35 @@ export default defineComponent({
 			changeSex,
 			sexCheck,
 			form,
+			clearAddress() {
+				form.address = []
+				form.cityId = ''
+			},
 			async submit() {
-				const data = await api.home.pickNote({
-					sex: sexCheck.value.id,
-					china_id: form.cityId,
-					school_id: form.school.id,
-					age_scope: form.age.replace(/ /g, ''),
-					hobby_ids: form.hobby.id,
-				})
+				submitLoading.value = true
+				const data = await api.home
+					.pickNote({
+						sex: sexCheck.value.id,
+						china_id: form.cityId,
+						school_id: form.school.id,
+						age_scope: form.age.replace(/ /g, ''),
+						hobby_ids: form.hobby.id,
+					})
+					.catch(() => {
+						submitLoading.value = false
+					})
+				if (!data) return (submitLoading.value = false)
 
 				if (data.free === 1) {
 					router.replace('/home/pickList')
+				} else {
+					Toast.loading({ duration: 0, forbidClick: true, message: '正在下单' })
+
+					api.wxpay.startPay(data.orderData, true).finally(() => {
+						router.replace('/home/pickList')
+						submitLoading.value = false
+					})
 				}
-				console.log(data)
 			},
 		}
 	},

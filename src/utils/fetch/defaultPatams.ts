@@ -4,6 +4,7 @@ import qs from 'qs'
 import { isEqual } from 'lodash'
 import { isFormData } from '../tool'
 import ajaxUrl from './url'
+import { isDev } from '..'
 
 // 将 T 中的 U 改为必填
 type FetchRequired<
@@ -40,7 +41,6 @@ export default function defaultParams(
 	// if (method === 'get' && isObject(data)) options.params = data
 
 	options.url = ajaxUrl('ajax') + url
-	console.log(options.url)
 	if (method.toLowerCase() === 'get' && Object.keys(data).length > 0) {
 		options.url += `?${qs.stringify(data)}`
 	}
@@ -60,7 +60,9 @@ export default function defaultParams(
 	if (file) {
 		headersConfig['Content-Type'] = 'application/x-www-form-urlencoded;charset=utf-8'
 	}
-	headersConfig.token = store.state.user.userInfo.token
+	headersConfig.token = isDev
+		? '1456427b-9afb-49f8-8465-f03c8700009f'
+		: store.state.user.userInfo.token
 
 	// 将 Fetch.config 设置为必填(已有值的状态)
 	const op = options as FetchRequired<Fetch.all, keyof Fetch.config>

@@ -39,6 +39,16 @@ export function getRef(refStr: string | Element): Ref<Element | undefined> {
 }
 
 /**
+ * 是否是微信浏览器
+ * @returns {boolean} 返回
+ */
+export function isWx() {
+	const ua = navigator.userAgent.toLowerCase()
+	const isWeixin = ua.indexOf('micromessenger') != -1
+	return isWeixin
+}
+
+/**
  * 判断是不是开发环境
  *
  * @returns {boolean} 返回是不是开发环境
@@ -173,6 +183,7 @@ export function myThrottle(delay = 300, onceRun = false) {
 		}
 	}
 }
+
 /**
  * 日期格式转换
  *
@@ -243,6 +254,15 @@ export function scrollBottom(el: Element, fn: Function, offset = 0): void {
 			}
 		}, 200)
 	)
+}
+
+/** */
+export function encode(str: string) {
+	// 对字符串进行编码
+	const encode = encodeURI(str)
+	// 对编码的字符串转化base64
+	const base64 = btoa(encode)
+	return base64
 }
 
 // 上传照片

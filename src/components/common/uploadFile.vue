@@ -42,7 +42,6 @@ export default defineComponent({
 		const selectFiles = ref<File[]>([])
 		const serverPaths = ref<string[]>([])
 		watch(serverPaths, (val) => {
-			console.log('emit', serverPaths)
 			emit('update:modelValue', serverPaths.value)
 		})
 		const selectFilesView = computed(() => selectFiles.value.map(URL.createObjectURL))
@@ -91,8 +90,6 @@ export default defineComponent({
 
 				Toast.clear()
 				serverPaths.value = [...serverPaths.value, ...data]
-
-				console.log(data)
 			},
 		}
 	},

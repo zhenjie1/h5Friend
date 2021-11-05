@@ -1,23 +1,28 @@
 import { stringify } from 'qs'
+import { isDev } from '..'
 
 export default function ajaxUrl(type: 'ws' | 'ajax' = 'ajax'): string {
 	const { host, protocol } = location
 	const onlineUrl = `${protocol}//${host}`
 
-	const urlKey = getQueryString('url')
-
-	const urls: { [key: string]: [string, string] | undefined } = {
-		// 王朝正
-		wcz: ['http://wcz.free.idcfengye.com/index.php', ''],
-		// 正式
-		zs: ['http://152.136.201.85/index.php', ''],
+	if (isDev) {
+		return '/zs'
 	}
 
-	if (urlKey) {
-		const index: 0 | 1 = type === 'ajax' ? 0 : 1
-		return '/' + urlKey
-		// return urls[urlKey]![index]
-	}
+	// const urlKey = getQueryString('url')
+
+	// const urls: { [key: string]: [string, string] | undefined } = {
+	// 	// 王朝正
+	// 	wcz: ['http://wcz.free.idcfengye.com/index.php', ''],
+	// 	// 正式
+	// 	zs: ['http://152.136.201.85/index.php', ''],
+	// }
+
+	// if (urlKey) {
+	// 	const index: 0 | 1 = type === 'ajax' ? 0 : 1
+	// 	return '/' + urlKey
+	// 	// return urls[urlKey]![index]
+	// }
 
 	return onlineUrl
 }

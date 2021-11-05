@@ -4,6 +4,7 @@
 			<van-cell-group>
 				<van-field
 					v-model="form.wxid"
+					size="large"
 					label="微信号"
 					label-width="60"
 					label-align="right"
@@ -13,7 +14,9 @@
 				/>
 				<van-field
 					v-model="form.age"
+					size="large"
 					label="年龄"
+					is-link
 					required
 					label-width="60"
 					label-align="right"
@@ -23,9 +26,10 @@
 				/>
 				<van-field
 					v-model="sexCheck.name"
-					is-link
+					size="large"
 					label-align="right"
 					label-width="60"
+					is-link
 					readonly
 					label="性别"
 					required
@@ -35,35 +39,57 @@
 				/>
 				<van-field
 					v-model="form.hobby.name"
+					size="large"
 					label="爱好"
 					label-width="60"
-					is-link
 					label-align="right"
 					readonly
 					@click="toNav('put/hobby')"
-				></van-field>
+				>
+					<template #button>
+						<van-icon
+							:name="form.hobby.name ? 'clear' : 'arrow'"
+							@click.stop="form.hobby = []"
+						/>
+					</template>
+				</van-field>
 				<van-field
 					v-model="address"
+					size="large"
 					label="地址"
 					label-align="right"
 					label-width="60"
 					readonly
-					is-link
 					@click="changeShow('city', true)"
 				>
+					<template #button>
+						<van-icon
+							:name="address ? 'clear' : 'arrow'"
+							@click.stop="form.address = []"
+						/>
+					</template>
 				</van-field>
 				<van-field
 					v-model="form.school.name"
 					label="学校"
+					size="large"
 					readonly
 					label-width="60"
 					label-align="right"
-					is-link
 					@click="toSchool"
-				></van-field>
+				>
+					<template #button>
+						<van-icon
+							:name="form.school.name ? 'clear' : 'arrow'"
+							@click.stop="form.school = {}"
+						/>
+					</template>
+				</van-field>
+
 				<van-field
 					v-model="form.introduction"
 					rows="3"
+					size="large"
 					autosize
 					required
 					label="简介"
@@ -87,6 +113,7 @@
 
 			<van-popup v-model:show="show.city" position="bottom">
 				<van-area
+					:value="form.adcode"
 					:area-list="areaList"
 					@confirm="changeLocation"
 					@cancel="show.city = false"
@@ -123,7 +150,7 @@
 
 <script lang="ts">
 import { areaList } from '@vant/area-data'
-import { computed, defineComponent, reactive, ref } from 'vue'
+import { computed, defineComponent, reactive, ref, watch } from 'vue'
 import mitt from 'mitt'
 import { useRouter } from 'vue-router'
 import { api } from '@/api'
@@ -142,14 +169,25 @@ export default defineComponent({
 			wxid: '',
 			age: '',
 			sexKey: 1,
+			adcode: '', // 选中的城市编码
+			// adcode: '410105', // 选中的城市编码
 			city: undefined,
-			cityText: '',
 			introduction: '',
 			imageUrls: [],
-			address: [''],
+			address: [],
 			hobby: {} as Data,
 			school: {} as Data,
 		})
+
+		watch(
+			() => form.age,
+			() => {
+				if (form.age > 60) {
+					Toast('年龄最大可输入 60')
+					form.age = 60
+				}
+			}
+		)
 
 		const sexData = [
 			{ name: '小哥哥', id: 1 },
@@ -198,6 +236,11 @@ export default defineComponent({
 			show.city = false
 			form.city = result.data[0]
 		}
+		AMapCollection.getUserPositionInfo().then((res) => {
+			const { province, city, district, adcode } = res.addressComponent
+			form.adcode = adcode
+			changeLocation([{ name: province }, { name: city }, { name: district }])
+		})
 
 		const submitLoading = ref(false)
 		return {
@@ -225,18 +268,29 @@ export default defineComponent({
 					age: form.age,
 					china_id: form.city?.id,
 				}
-				const data = (await api.home.enterNote(params)) as Data
-				Toast(data.msg)
-				initFormFn()
-				router.replace('/home/putList')
+				submitLoading.value = true
+				const data = (await api.home
+					.enterNote(params)
+					.catch(() => (submitLoading.value = false))) as Data
+				if (data.msg) Toast(data.msg)
+
+				if (data.data.free === 2) {
+					Toast.loading({ duration: 0, forbidClick: true, message: '正在下单' })
+
+					api.wxpay
+						.startPay(data.data.orderData, true)
+						.then(initFormFn)
+						.finally(() => {
+							submitLoading.value = false
+							router.replace('/home/putList')
+						})
+				} else {
+					submitLoading.value = false
+					initFormFn()
+					router.replace('/home/putList')
+				}
 			},
 		}
-	},
-	mounted() {
-		AMapCollection.getUserPositionInfo().then((res) => {
-			this.form.cityText = res.addressComponent.city
-			console.log(this.form.city)
-		})
 	},
 	methods: {
 		toSchool() {
@@ -252,15 +306,10 @@ export default defineComponent({
 					duration: 0,
 				})
 			}
-			uploadImage(files.map((v) => v.file))
-				.then((res) => {
-					console.log(res)
-				})
-				.catch((err) => {
-					Toast.clear()
-					if (err.msg) Toast(`第 ${err.index + 1} 张: ${err.msg}`)
-				})
-			// console.log(files)
+			uploadImage(files.map((v) => v.file)).catch((err) => {
+				Toast.clear()
+				if (err.msg) Toast(`第 ${err.index + 1} 张: ${err.msg}`)
+			})
 		},
 		changeShow(this: any, key: string, val: boolean) {
 			this.show[key] = val
